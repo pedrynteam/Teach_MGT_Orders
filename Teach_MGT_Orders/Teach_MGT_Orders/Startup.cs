@@ -13,6 +13,10 @@ using Teach_MGT_Orders.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Teach_MGT_Orders.Models;
+using HotChocolate;
+using Teach_MGT_Orders.OrdersAPI.GraphQL;
+using Teach_MGT_Orders.GraphQLActions;
+using HotChocolate.AspNetCore;
 
 namespace Teach_MGT_Orders
 {
@@ -45,6 +49,22 @@ namespace Teach_MGT_Orders
 
             services.AddDbContext<MVCDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MVCDbContext")));
+
+
+            // Add GraphQL Services
+            services.AddGraphQL(sp => Schema.Create(c =>
+            {
+                c.RegisterServiceProvider(sp);
+
+                // Adds the authorize directive and
+                // enables the authorization middleware.
+                // c.RegisterAuthorizeDirectiveType();
+                c.RegisterQueryType<GraphQLActions.GraphQLQueryType>();
+
+            }));
+           
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,12 +87,22 @@ namespace Teach_MGT_Orders
 
             app.UseAuthentication();
 
+            /* this part is failing the playground and get Schema. Syn, Sync, Sync 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            // */
+
+            // enable this if you want tu support subscription.
+            // app.UseWebSockets();
+            app.UseGraphQL();
+            // enable this if you want to use graphiql instead of playground.
+            app.UseGraphiQL();
+            app.UsePlayground();
+
         }
     }
 }

@@ -3,12 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>aspnet-Teach_MGT_Orders-44F1B05D-2506-49E4-A019-EBCFA2EE187C</UserSecretsId>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HotChocolate.AspNetCore" Version="0.7.0" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="0.7.0" />
+    <PackageReference Include="HotChocolate.AspNetCore.GraphiQL" Version="0.7.0" />
+    <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="0.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
