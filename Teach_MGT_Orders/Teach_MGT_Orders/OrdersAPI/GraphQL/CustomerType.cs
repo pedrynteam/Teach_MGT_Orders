@@ -35,11 +35,33 @@ namespace Teach_MGT_Orders.OrdersAPI.GraphQL
                     // 1. Where index based
                     // 2. Order By
                     // 3. Take 
-                    return context.Service<MVCDbContext>().Order.Where(x => x.CustomerId == context.Parent<Customer>().CustomerId).Where(x => x.OrderId > _index).OrderBy(y => y.OrderId).Take(_take);
+                    return context.Service<MVCDbContext>().Order.Where(x => x.CustomerId == context.Parent<Customer>().CustomerId).Where(x => x.OrderId > _index).OrderByDescending(y => y.OrderId).Take(_take);
                 }
                 )
                 ;
             
         }
-    }    
+    }
+
+    // Leave it empty, HotChocolate will take care of it
+    public class CustomerInputType : InputObjectType<Customer>
+    {        
+        /*
+        protected override void Configure(IInputObjectTypeDescriptor<Customer> descriptor)
+        {
+            descriptor.Field(t => t.CustomerId)
+                    .Type<IntType>()                
+                    .Description("The new customer id");
+
+            descriptor.Field(t => t.Name)
+                .Type<NonNullType<StringType>>()
+                .Description("The name of the customer");
+
+            descriptor.Field(t => t.Orders)
+                .Ignore();
+        }
+        */
+        
+    }
+
 }

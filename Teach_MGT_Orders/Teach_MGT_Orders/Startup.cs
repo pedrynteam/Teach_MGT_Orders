@@ -17,6 +17,8 @@ using HotChocolate;
 using Teach_MGT_Orders.OrdersAPI.GraphQL;
 using Teach_MGT_Orders.GraphQLActions;
 using HotChocolate.AspNetCore;
+using Teach_MGT_Orders.OrdersAPI.Transactions;
+using HotChocolate.Subscriptions;
 
 namespace Teach_MGT_Orders
 {
@@ -50,6 +52,10 @@ namespace Teach_MGT_Orders
             services.AddDbContext<MVCDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MVCDbContext")));
 
+            // Add in-memory event provider - This is for subscriptions. NuGet Package HotChocolate.Subscriptions.InMemory
+            var eventRegistry = new InMemoryEventRegistry();
+            services.AddSingleton<IEventRegistry>(eventRegistry);
+            services.AddSingleton<IEventSender>(eventRegistry);
 
             // Add GraphQL Services
             services.AddGraphQL(sp => Schema.Create(c =>
@@ -60,10 +66,11 @@ namespace Teach_MGT_Orders
                 // enables the authorization middleware.
                 // c.RegisterAuthorizeDirectiveType();
                 c.RegisterQueryType<GraphQLActions.GraphQLQueryType>();
+                c.RegisterMutationType<GraphQLActions.GraphQLMutationType>();
+                c.RegisterSubscriptionType<GraphQLActions.GraphQLSubscriptionType>();
 
             }));
            
-
 
         }
 
@@ -97,7 +104,7 @@ namespace Teach_MGT_Orders
             // */
 
             // enable this if you want tu support subscription.
-            // app.UseWebSockets();
+            app.UseWebSockets();
             app.UseGraphQL();
             // enable this if you want to use graphiql instead of playground.
             app.UseGraphiQL();
